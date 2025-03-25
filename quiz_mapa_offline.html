@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz kontynenty i oceany</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to right, #f9f9f9, #d6f0ff);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .intro {
+            margin-bottom: 20px;
+        }
+        .map-container {
+            position: relative;
+            width: 80vw;
+            max-width: 1000px;
+            margin: auto;
+            border: 4px dashed #4db8ff;
+            border-radius: 10px;
+            background-color: white;
+        }
+        #mapa {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px 10px 0 0;
+        }
+        .input-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+        .input-label input {
+            padding: 5px 10px;
+            font-size: 14px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            width: 120px;
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .name-entry {
+            margin-bottom: 20px;
+        }
+        .name-entry input {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #aaa;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍 Quiz: Nazwy kontynentów i oceanów 🌊</h1>
+
+    <div class="intro">
+        <div class="name-entry">
+            <label for="imie">Podaj swoje imię:</label>
+            <input type="text" id="imie" placeholder="Twoje imię">
+        </div>
+        <button onclick="rozpocznij()">Rozpocznij zabawę!</button>
+    </div>
+
+    <div class="map-container" id="quiz" style="display: none;">
+        <img id="mapa" src="mapa_konturowa.svg" alt="Mapa konturowa">
+
+        <div class="input-label" style="top: 25%; left: 20%;"><input id="ameryka_pn" placeholder="Kontynent"></div>
+        <div class="input-label" style="top: 55%; left: 30%;"><input id="ameryka_pl" placeholder="Kontynent"></div>
+        <div class="input-label" style="top: 45%; left: 55%;"><input id="afryka" placeholder="Kontynent"></div>
+        <div class="input-label" style="top: 20%; left: 52%;"><input id="europa" placeholder="Kontynent"></div>
+        <div class="input-label" style="top: 15%; left: 70%;"><input id="azja" placeholder="Kontynent"></div>
+        <div class="input-label" style="top: 70%; left: 85%;"><input id="australia" placeholder="Kontynent"></div>
+        <div class="input-label" style="top: 95%; left: 50%;"><input id="antarktyda" placeholder="Kontynent"></div>
+
+        <div class="input-label" style="top: 60%; left: 10%;"><input id="spokojny" placeholder="Ocean"></div>
+        <div class="input-label" style="top: 40%; left: 38%;"><input id="atlantycki" placeholder="Ocean"></div>
+        <div class="input-label" style="top: 65%; left: 70%;"><input id="indyjski" placeholder="Ocean"></div>
+        <div class="input-label" style="top: 8%; left: 50%;"><input id="arktyczny" placeholder="Ocean"></div>
+        <div class="input-label" style="top: 80%; left: 50%;"><input id="poludniowy" placeholder="Ocean"></div>
+    </div>
+
+    <div id="przyciski" style="display: none;">
+        <button onclick="sprawdz()">Sprawdź odpowiedzi</button>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+        const poprawne = {
+            afryka: "afryka",
+            europa: "europa",
+            azja: "azja",
+            ameryka_pn: "ameryka północna",
+            ameryka_pl: "ameryka południowa",
+            australia: "australia",
+            antarktyda: "antarktyda",
+            spokojny: "ocean spokojny",
+            atlantycki: "ocean atlantycki",
+            indyjski: "ocean indyjski",
+            arktyczny: "ocean arktyczny",
+            poludniowy: "ocean południowy"
+        };
+
+        function rozpocznij() {
+            const imie = document.getElementById("imie").value.trim();
+            if (!imie) {
+                alert("Podaj swoje imię, zanim zaczniesz!");
+                return;
+            }
+            document.querySelector(".intro").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("przyciski").style.display = "block";
+        }
+
+        function sprawdz() {
+            let wynik = "";
+            let poprawne_liczba = 0;
+            let wszystkie = Object.keys(poprawne).length;
+            let imie = document.getElementById("imie").value.trim();
+
+            for (const id in poprawne) {
+                const input = document.getElementById(id);
+                const wartosc = input.value.trim().toLowerCase();
+                if (wartosc === poprawne[id]) {
+                    poprawne_liczba++;
+                    input.style.borderColor = "green";
+                } else {
+                    input.style.borderColor = "red";
+                }
+            }
+
+            if (poprawne_liczba === wszystkie) {
+                wynik = `🎉 Brawo, ${imie}! Wszystkie odpowiedzi są poprawne! 🏆`;
+            } else {
+                wynik = `${imie}, masz ${poprawne_liczba} z ${wszystkie} poprawnych odpowiedzi. Spróbuj jeszcze raz! 💪`;
+            }
+
+            document.getElementById("feedback").innerText = wynik;
+        }
+    </script>
+</body>
+</html>
