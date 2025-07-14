@@ -138,6 +138,14 @@
             document.getElementById("przyciski").style.display = "block";
         }
 
+        function normalize(txt) {
+            return txt
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/ł/g, 'l')
+                .replace(/Ł/g, 'L');
+        }
+
         function sprawdz() {
             let wynik = "";
             let poprawne_liczba = 0;
@@ -146,8 +154,9 @@
 
             for (const id in poprawne) {
                 const input = document.getElementById(id);
-                const wartosc = input.value.trim().toLowerCase();
-                if (wartosc === poprawne[id]) {
+                const wartosc = normalize(input.value.trim().toLowerCase());
+                const oczekiwana = normalize(poprawne[id]);
+                if (wartosc === oczekiwana) {
                     poprawne_liczba++;
                     input.style.borderColor = "green";
                 } else {
